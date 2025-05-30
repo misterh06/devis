@@ -3,70 +3,243 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chat Devis Futuriste</title>
+  <title>Chat Devis - Assistant IA</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Neon accent color */
-    .neon-text { text-shadow: 0 0 8px rgba(0, 255, 255, 0.7); }
-    .neon-bg { background-color: rgba(0, 255, 255, 0.1); box-shadow: 0 0 12px rgba(0, 255, 255, 0.4); }
-    .scrollbar-thin::-webkit-scrollbar { width: 4px; }
-    .scrollbar-thin::-webkit-scrollbar-thumb { background-color: rgba(0,255,255,0.5); border-radius: 2px; }
-    /* Style pour le lien du fichier (si vous l'utilisez plus tard) */
-    .file-link { color: #67e8f9; text-decoration: underline; }
-    /* Style pour le champ d'affichage de l'ID */
-    #document-id-display-container { margin-top: 1rem; }
-    #document-id-value {
-        background-color: rgba(0, 255, 255, 0.05); /* Léger fond neon */
-        border: 1px solid rgba(0, 255, 255, 0.2);
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.375rem; /* rounded-lg */
-        color: #e5e7eb; /* text-gray-200 */
-        font-family: monospace; /* Pour bien afficher les IDs */
-        word-break: break-all; /* Pour éviter le débordement de longs IDs */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: 
+        linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.85) 50%, rgba(51, 65, 85, 0.85) 100%),
+        url('background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+    }
+    
+    /* Effets lumineux adoucis */
+    .glow-text { 
+      text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+    
+    .glass-effect { 
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+    }
+    
+    .glass-effect:hover {
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    /* Boutons modernes */
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      border: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      transform: translateY(-1px);
+    }
+    
+    /* Messages du chat */
+    .message-user {
+      background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+      box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
+      color: white;
+    }
+    
+    .message-ai {
+      background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+      box-shadow: 0 3px 10px rgba(100, 116, 139, 0.3);
+      color: white;
+    }
+    
+    /* Inputs améliorés */
+    .input-modern {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      color: white;
+    }
+    
+    .input-modern::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .input-modern:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+      outline: none;
+    }
+    
+    /* Chat container */
+    .chat-container {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    
+    /* Scrollbar */
+    .scrollbar-custom::-webkit-scrollbar { 
+      width: 6px; 
+    }
+    .scrollbar-custom::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+    }
+    .scrollbar-custom::-webkit-scrollbar-thumb { 
+      background: rgba(59, 130, 246, 0.6);
+      border-radius: 3px;
+    }
+    .scrollbar-custom::-webkit-scrollbar-thumb:hover { 
+      background: rgba(59, 130, 246, 0.8);
+    }
+    
+    /* Document ID container */
+    .document-id-box {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+    }
+    
+    /* Animations douces */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Header avec style moderne */
+    .header-modern {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
-<body class="min-h-screen bg-gray-900 text-gray-100 font-sans">
-  <div class="max-w-3xl mx-auto p-6">
-    <h1 class="text-4xl font-extrabold neon-text mb-6 text-center">Assistant Devis IA</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <input id="name" type="text" placeholder="Nom" class="p-3 rounded-lg neon-bg focus:outline-none focus:ring-2 focus:ring-cyan-400" />
-      <input id="firstname" type="text" placeholder="Prénom" class="p-3 rounded-lg neon-bg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-/>
-      <input id="email" type="email" placeholder="Email" class="p-3 rounded-lg neon-bg focus:outline-none focus:ring-2 focus:ring-cyan-400" />
-      <input id="phone" type="tel" placeholder="Téléphone" class="p-3 rounded-lg neon-bg focus:outline-none focus:ring-2 focus:ring-cyan-400" />
-      <input id="address" type="text" placeholder="Adresse" class="p-3 rounded-lg neon-bg focus:outline-none focus:ring-2 focus:ring-cyan-400 md:col-span-2" />
-    </div>
-    <div class="mb-6 text-center">
-      <button id="register-btn" class="px-6 py-3 bg-green-500 rounded-lg font-bold uppercase tracking-wide hover:bg-green-400 transition neon-bg focus:outline-none focus:ring-2 focus:ring-green-300">
-        S'enregistrer & Créer Devis
-      </button>
-    </div>
+<body class="min-h-screen text-gray-100">
+  <div class="max-w-4xl mx-auto p-6">
+    <!-- Header -->
+    <div class="header-modern glass-effect rounded-xl p-4 mb-4 fade-in">
+  <h1 class="text-2xl font-semibold text-center text-blue-200 tracking-wide">
+    Assistant Devis IA
+  </h1>
+  <p class="text-center text-gray-400 text-sm mt-1">
+    Votre partenaire pour vos projets de rénovation
+  </p>
+</div>
 
-    <div id="document-id-display-container" class="mb-6 text-left" style="display: none;">
-        <p class="text-sm text-gray-400 mb-1">ID du document généré :</p>
-        <div id="document-id-value" class="p-2 rounded-lg neon-bg">
-            <!-- L'ID du document sera inséré ici par JavaScript -->
-        </div>
-    </div>
+    
+    <!-- Formulaire Client -->
+    <div class="glass-effect rounded-2xl p-8 mb-8 fade-in">
+      <h2 class="text-2xl font-semibold mb-6 text-center text-blue-200">
+        Informations Client
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <input id="name" type="text" placeholder="Nom" 
+               class="p-4 rounded-lg input-modern" />
+        <input id="firstname" type="text" placeholder="Prénom" 
+               class="p-4 rounded-lg input-modern" />
+        <input id="email" type="email" placeholder="Email" 
+               class="p-4 rounded-lg input-modern" />
+        <input id="phone" type="tel" placeholder="Téléphone" 
+               class="p-4 rounded-lg input-modern" />
+        <input id="address" type="text" placeholder="Adresse" 
+               class="p-4 rounded-lg input-modern md:col-span-2" />
+      </div>
+      
+      <div class="text-center">
+        <button id="register-btn" 
+        class="px-4 py-2 btn-secondary rounded-lg font-semibold text-lg text-white shadow-lg">
+  S'enregistrer & Créer Devis
+</button>
 
-    <div id="chat-container" class="bg-gray-800 rounded-xl p-4 h-96 overflow-y-auto scrollbar-thin mb-4">
-      <div class="mb-2 p-2 max-w-[80%] rounded-lg bg-gray-700 dark:bg-gray-700">
-        Veuillez renseigner les informations ci-dessus avant de décrire votre projet.".
       </div>
     </div>
-    <div class="flex">
-      <input id="chat-input" type="text" placeholder="Votre message pour le chat..." class="flex-grow p-3 rounded-l-lg bg-gray-800 focus:outline-none focus:ring-2 focus:ring-cyan-400 neon-bg" />
-      <button id="send-btn" class="px-6 bg-cyan-500 rounded-r-lg font-bold uppercase tracking-wide hover:bg-cyan-400 transition">Envoyer (Chat)</button>
+
+    <!-- ID Document -->
+    <div id="document-id-display-container" class="document-id-box rounded-xl p-6 mb-6 fade-in" style="display: none;">
+      <p class="text-lg font-semibold mb-3 text-emerald-300">
+        ID du document généré :
+      </p>
+      <div id="document-id-value" class="p-4 rounded-lg font-mono text-sm break-all bg-black bg-opacity-20 text-emerald-200">
+        <!-- L'ID du document sera inséré ici par JavaScript -->
+      </div>
+    </div>
+
+    <!-- Chat -->
+    <div class="glass-effect rounded-2xl p-6 fade-in">
+      <h2 class="text-2xl font-semibold mb-4 text-center text-blue-200">
+        Chat Assistant
+      </h2>
+      
+      <div id="chat-container" class="chat-container rounded-xl p-6 h-96 overflow-y-auto scrollbar-custom mb-6">
+        <div class="message-ai mb-4 p-4 max-w-[85%] rounded-xl shadow-lg fade-in">
+          <strong>Assistant :</strong> Bonjour ! Veuillez renseigner vos informations ci-dessus avant de décrire votre projet de rénovation.
+        </div>
+      </div>
+      
+      <div class="flex gap-3">
+  <input id="chat-input" type="text" placeholder="Décrivez votre projet de rénovation..." 
+         class="flex-grow p-4 rounded-lg input-modern" disabled />
+  <button id="send-btn" 
+          class="px-6 py-4 btn-primary rounded-lg font-semibold text-white shadow-lg" disabled>
+    Envoyer
+  </button>
+  <button id="finaliser-btn" 
+          class="px-6 py-4 btn-secondary rounded-lg font-semibold text-white shadow-lg" disabled>
+    Établir le devis
+  </button>
+</div>
+
+
+  
+
+</div>
+
+      </div>
     </div>
   </div>
 
   <script>
-    let sessionId = localStorage.getItem('devisSession') || Date.now().toString();
-    localStorage.setItem('devisSession', sessionId);
+    let sessionId = sessionStorage.getItem('sessionId');
 
-    // NOUVEAU: Variable pour stocker le documentId reçu du premier workflow
+if (!sessionId) {
+  sessionId = Date.now().toString() + '-' + Math.floor(Math.random() * 10000);
+  sessionStorage.setItem('sessionId', sessionId);
+}
+    
     let currentDocumentId = null; 
+    const chatInput = document.getElementById('chat-input');
+
+    const finalizeBtn = document.getElementById('finaliser-btn');
 
     const chatContainer = document.getElementById('chat-container');
     const input = document.getElementById('chat-input');
@@ -82,15 +255,19 @@
     const documentIdDisplayContainer = document.getElementById('document-id-display-container');
     const documentIdValueElement = document.getElementById('document-id-value');
 
-
     function appendMessage(role, text, isHtml = false) {
       const msg = document.createElement('div');
-      msg.className = `mb-2 p-2 max-w-[80%] rounded-lg ${role === 'user' ? 'ml-auto bg-cyan-600 neon-bg' : 'bg-gray-700'} dark:bg-gray-700`;
+      const prefix = role === 'user' ? 'Vous :' : 'Assistant :';
+      const messageClass = role === 'user' ? 'message-user ml-auto' : 'message-ai';
+      
+      msg.className = `${messageClass} mb-4 p-4 max-w-[85%] rounded-xl shadow-lg fade-in`;
+      
       if (isHtml) {
-        msg.innerHTML = text;
+        msg.innerHTML = `<strong>${prefix}</strong> ${text}`;
       } else {
-        msg.textContent = text;
+        msg.innerHTML = `<strong>${prefix}</strong> ${text}`;
       }
+      
       chatContainer.appendChild(msg);
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
@@ -107,52 +284,42 @@
         return;
       }
 
-      // MODIFIÉ: Cacher l'ancien ID et réinitialiser currentDocumentId
       documentIdDisplayContainer.style.display = 'none';
       documentIdValueElement.textContent = '';
-      currentDocumentId = null; // Réinitialiser avant une nouvelle création
+      currentDocumentId = null;
 
       const userData = { prenom: firstName, name, email, phone, address, sessionId };
 
-
       try {
-        registerBtn.textContent = 'Traitement...';
+        registerBtn.textContent = 'Traitement en cours...';
         registerBtn.disabled = true;
-        // IMPORTANT: URL de votre webhook qui crée le document (From_html_client)
+        
         const res = await fetch('https://n8n.n8n-sbf-avocats.fr/webhook/client', { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(userData)
         });
 
-       // Dans la fonction registerAndCreateDevis()
-
         if (res.ok) {
+          chatInput.disabled = false;
+          sendBtn.disabled = false;
+          finalizeBtn.disabled = false;
           const result = await res.json(); 
           console.log("Réponse du webhook de création:", result); 
 
-          
           const greetingName = result.prenom || "";                      
+          let greetingMessage = `Bonjour${greetingName ? ", " + greetingName : ""} !`;
+          greetingMessage += " Pouvez-vous me décrire votre projet de rénovation ?";
 
-let greetingMessage = `Bonjour${greetingName ? ", " + greetingName : ""} !`;
-greetingMessage += " Pouvez-vous me décrire votre projet ?";
-
-appendMessage("ai", greetingMessage); 
-
+          appendMessage("ai", greetingMessage); 
           
-          if (result.documentId) {
-            documentIdValueElement.textContent = result.documentId;
-            documentIdDisplayContainer.style.display = 'block';
-            currentDocumentId = result.documentId;  
-            
-          } 
+         
           
           if (result.message && result.message.trim() !== "") {
-             
-             appendMessage('ai', `Note de l'assistant : ${result.message}`);
+             appendMessage('ai', `Note : ${result.message}`);
           }
 
-          registerBtn.textContent = 'Opération Réussie !';
+          registerBtn.textContent = 'Opération réussie !';
           
         } else {
           const errorText = await res.text();
@@ -162,75 +329,132 @@ appendMessage("ai", greetingMessage);
         }
       } catch (err) {
         console.error('Operation error:', err);
-        appendMessage('ai', "Erreur de connexion lors de l'opération. Veuillez vérifier votre console et réessayer.");
+        appendMessage('ai', "Erreur de connexion lors de l'opération. Veuillez réessayer.");
         registerBtn.textContent = "S'enregistrer & Créer Devis";
         registerBtn.disabled = false;
       }
     }
 
-    async function sendMessage() {
-      const message = input.value.trim();
-      if (!message) return;
-      appendMessage('user', message);
-      input.value = '';
-      
-      const meta = {
-        name: nameInput.value,
-        email: emailInput.value,
-        phone: phoneInput.value,
-        address: addressInput.value
-      };
+ 
+  async function sendMessage() {
+    const message = input.value.trim();
+    if (!message) return;
+    appendMessage('user', message);
+    input.value = '';
 
-      // MODIFIÉ: Préparer le payload pour le chat
-      const chatPayload = { 
-          sessionId, 
-          message, 
-          meta 
-      };
+    const meta = {
+      name: nameInput.value,
+      prenom: firstNameInput.value,
+      email: emailInput.value,
+      phone: phoneInput.value,
+      address: addressInput.value
+    };
 
-      // NOUVEAU: Ajouter documentId au payload s'il existe
-      if (currentDocumentId) {
-          chatPayload.documentId = currentDocumentId;
-      }
-      console.log("Payload envoyé au chat:", chatPayload); // Pour débogage
+    const chatPayload = {
+      sessionId,
+      message,
+      meta
+    };
 
-      try {
-        // IMPORTANT: URL de votre webhook de CHAT
-        const res = await fetch('https://n8n.n8n-sbf-avocats.fr/webhook/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(chatPayload) // Utiliser le payload mis à jour
-        });
-        if (res.ok) {
-    const dataArray = await res.json(); // La réponse est un tableau
-    console.log("Tableau de données JSON parsées:", dataArray); // Pour débogage
+    try {
+      const res = await fetch('https://n8n.n8n-sbf-avocats.fr/webhook/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(chatPayload)
+      });
 
-    // Vérifier si dataArray est bien un tableau et qu'il n'est pas vide
-    if (Array.isArray(dataArray) && dataArray.length > 0) {
-        const firstElement = dataArray[0]; // Prendre le premier objet du tableau
-        if (firstElement && firstElement.output) { // Vérifier si l'objet existe et a une clé "output"
+      if (res.ok) {
+        const dataArray = await res.json();
+        console.log("Réponse du chat :", dataArray);
+
+        if (Array.isArray(dataArray) && dataArray.length > 0) {
+          const firstElement = dataArray[0];
+
+          if (firstElement && firstElement.output) {
             appendMessage('ai', firstElement.output);
+
+            // 🧠 Déclenche création de devis si l'IA indique qu'elle a fini
+            if (firstElement.output.trim() === "je vais procéder à la création du devis") {
+              const resDoc = await fetch('https://n8n.n8n-sbf-avocats.fr/webhook/generate-devis', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId, meta })
+              });
+
+              if (resDoc.ok) {
+                const resultDoc = await resDoc.json();
+                if (resultDoc.documentId) {
+                  documentIdValueElement.textContent = resultDoc.documentId;
+                  documentIdDisplayContainer.style.display = 'block';
+                  currentDocumentId = resultDoc.documentId;
+                } else {
+                  appendMessage('ai', "Le document a été généré mais aucun ID n’a été retourné.");
+                }
+              } else {
+                appendMessage('ai', "Erreur lors de la génération du devis.");
+              }
+            }
+
+          } else {
+            appendMessage('ai', 'Réponse mal formatée.');
+          }
         } else {
-            appendMessage('ai', 'Format de réponse inattendu (objet sans "output").');
+          appendMessage('ai', 'Réponse vide ou inattendue du serveur de chat.');
         }
-    } else {
-        appendMessage('ai', 'Réponse inattendue du serveur de chat (tableau vide ou non-tableau).');
-    }
-} else {
-    const errorData = await res.text();
-    appendMessage('ai', `Erreur du serveur de chat: ${res.status} ${res.statusText}. Détail: ${errorData}. Réessayez.`);
-}
-      } catch (err) {
-        console.error('Chat error:', err);
-        appendMessage('ai', 'Erreur de connexion au service de chat. Réessayez.');
+      } else {
+        const errorData = await res.text();
+        appendMessage('ai', `Erreur : ${res.status} ${res.statusText}.`);
       }
+
+    } catch (err) {
+      console.error('Erreur de chat :', err);
+      appendMessage('ai', 'Impossible de contacter le serveur de chat.');
     }
+  }
+
 
     registerBtn.addEventListener('click', registerAndCreateDevis);
     sendBtn.addEventListener('click', sendMessage);
     input.addEventListener('keypress', e => {
       if (e.key === 'Enter' && document.activeElement === input) sendMessage();
     });
+    finalizeBtn.addEventListener('click', async () => {
+  const meta = {
+    name: nameInput.value,
+    prenom: firstNameInput.value,
+    email: emailInput.value,
+    phone: phoneInput.value,
+    address: addressInput.value
+  };
+
+  const payload = {
+    sessionId,
+    message: "ETABLIR_DEVIS", // commande spéciale
+    meta
+  };
+
+  try {
+    const res = await fetch('https://n8n.n8n-sbf-avocats.fr/webhook/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      appendMessage('ai', "Parfait, je vais établir le devis avec les informations recueillies !");
+      
+      // 🔒 Désactiver les éléments du chat pour ne plus interagir
+      input.disabled = true;
+      sendBtn.disabled = true;
+      finalizeBtn.disabled = true;
+
+    } else {
+      appendMessage('ai', "Erreur lors de la transmission de la demande de devis.");
+    }
+  } catch (err) {
+    appendMessage('ai', "Impossible de contacter le serveur pour finaliser le devis.");
+  }
+});
 
   </script>
 </body>
