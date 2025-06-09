@@ -279,8 +279,11 @@ if (!sessionId) {
       const phone = phoneInput.value.trim();
       const address = addressInput.value.trim();
 
-      if (!name || !email) {
-        appendMessage('ai', "Veuillez renseigner au moins votre nom et email.");
+       if (!name || !firstName || !email || !phone || !address) {
+  appendMessage(
+    'ai',
+    "Merci de remplir **tous** les champs : nom, prénom, email, téléphone et adresse."
+  );
         return;
       }
 
