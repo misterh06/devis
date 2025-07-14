@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Création de devis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #f1f5f9 0%, #e0e7ef 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #1e293b;
+    }
+    .input-modern {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+      transition: all 0.2s;
+    }
+    .input-modern:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px #3b82f6a8;
+      outline: none;
+      background: #e0e7ef;
+    }
+    textarea.input-modern { min-height: 54px; }
+    .msg-success { color: #059669; }
+    .msg-error { color: #ef4444; }
+    .bg-section { background: #f8fafc; }
+  </style>
+</head>
+<body class="flex items-center justify-center">
+  <div class="w-full max-w-2xl bg-section rounded-2xl shadow-xl p-8 mt-10">
+    <h1 class="text-3xl font-bold text-blue-700 mb-8 text-center">Créer un devis</h1>
+    <!-- Sélection du client -->
+    <label for="client-select" class="block mb-2 text-lg text-blue-700">Sélectionner un client</label>
+    <select id="client-select" class="input-modern w-full p-4 rounded-lg mb-6"></select>
+    <!-- Affichage infos client -->
+    <div id="client-infos" class="mb-6 hidden rounded-xl p-4 border border-blue-100 bg-white">
+      <div class="mb-2"><span class="font-semibold">Nom&nbsp;:</span> <span id="c-nom"></span></div>
+      <div class="mb-2"><span class="font-semibold">Prénom&nbsp;:</span> <span id="c-prenom"></span></div>
+      <div class="mb-2"><span class="font-semibold">Adresse&nbsp;:</span> <span id="c-adresse"></span></div>
+      <div class="mb-2"><span class="font-semibold">Téléphone&nbsp;:</span> <span id="c-phone"></span></div>
+      <div><span class="font-semibold">Email&nbsp;:</span> <span id="c-email"></span></div>
+    </div>
+    <!-- Saisie des postes -->
+    <form id="devis-form">
+      <div class="grid grid-cols-1 gap-4 mb-6">
+        <label class="font-semibold text-blue-700">Postes du devis</label>
+<div class="grid grid-cols-1 gap-4">
+  <div class="relative">
+    <textarea class="p-3 pr-12 w-full rounded-lg input-modern" id="poste1" placeholder="POSTE 1"></textarea>
+    <button type="button" class="absolute top-3 right-3 text-blue-600 hover:text-blue-800" onclick="startVoiceInput('poste1')">🎤</button>
+  </div>
+  <div class="relative">
+    <textarea class="p-3 pr-12 w-full rounded-lg input-modern" id="poste2" placeholder="POSTE 2"></textarea>
+    <button type="button" class="absolute top-3 right-3 text-blue-600 hover:text-blue-800" onclick="startVoiceInput('poste2')">🎤</button>
+  </div>
+  <div class="relative">
+    <textarea class="p-3 pr-12 w-full rounded-lg input-modern" id="poste3" placeholder="POSTE 3"></textarea>
+    <button type="button" class="absolute top-3 right-3 text-blue-600 hover:text-blue-800" onclick="startVoiceInput('poste3')">🎤</button>
+  </div>
+  <div class="relative">
+    <textarea class="p-3 pr-12 w-full rounded-lg input-modern" id="poste4" placeholder="POSTE 4"></textarea>
+    <button type="button" class="absolute top-3 right-3 text-blue-600 hover:text-blue-800" onclick="startVoiceInput('poste4')">🎤</button>
+  </div>
+  <div class="relative">
+    <textarea class="p-3 pr-12 w-full rounded-lg input-modern" id="poste5" placeholder="POSTE 5"></textarea>
+    <button type="button" class="absolute top-3 right-3 text-blue-600 hover:text-blue-800" onclick="startVoiceInput('poste5')">🎤</button>
+  </div>
+  <div class="relative">
+    <textarea class="p-3 pr-12 w-full rounded-lg input-modern" id="poste6" placeholder="POSTE 6"></textarea>
+    <button type="button" class="absolute top-3 right-3 text-blue-600 hover:text-blue-800" onclick="startVoiceInput('poste6')">🎤</button>
+  </div>
+  <div class="relative">
+    <textarea class="p-3 pr-12 w-full rounded-lg input-modern" id="poste7" placeholder="POSTE 7"></textarea>
+    <button type="button" class="absolute top-3 right-3 text-blue-600 hover:text-blue-800" onclick="startVoiceInput('poste7')">🎤</button>
+  </div>
+  <div class="relative">
+    <textarea class="p-3 pr-12 w-full rounded-lg input-modern" id="poste8" placeholder="POSTE 8"></textarea>
+    <button type="button" class="absolute top-3 right-3 text-blue-600 hover:text-blue-800" onclick="startVoiceInput('poste8')">🎤</button>
+  </div>
+  <div class="relative">
+    <textarea class="p-3 pr-12 w-full rounded-lg input-modern" id="poste9" placeholder="POSTE 9"></textarea>
+    <button type="button" class="absolute top-3 right-3 text-blue-600 hover:text-blue-800" onclick="startVoiceInput('poste9')">🎤</button>
+  </div>
+</div>
+
+      </div>
+      <button type="submit" class="w-full py-3 text-lg font-bold bg-blue-600 rounded-xl hover:bg-blue-700 transition text-white shadow-lg">
+        Envoyer le devis
+      </button>
+    </form>
+    <div id="msg" class="mt-6 text-center"></div>
+  </div>
+  <script>
+    const CLIENTS_URL = 'https://n8n.n8n-sbf-avocats.fr/webhook/clients-list';
+    const DEVIS_URL = 'https://n8n.n8n-sbf-avocats.fr/webhook/copie-trame-devis';
+
+    let clients = [];
+    let selectedClient = null;
+    let copiedDocId = null;
+
+
+    const select = document.getElementById('client-select');
+    const info = document.getElementById('client-infos');
+    const cNom = document.getElementById('c-nom');
+    const cPrenom = document.getElementById('c-prenom');
+    const cAdresse = document.getElementById('c-adresse');
+    const cPhone = document.getElementById('c-phone');
+    const cEmail = document.getElementById('c-email');
+    const msg = document.getElementById('msg');
+
+    // Charger les clients depuis le webhook
+    async function loadClients() {
+      select.innerHTML = '<option value="">Chargement…</option>';
+      try {
+        const res = await fetch(CLIENTS_URL);
+        clients = await res.json();
+        select.innerHTML = '<option value="">Sélectionnez…</option>';
+        clients.forEach((c, idx) => {
+          select.innerHTML += `<option value="${idx}">${c.Nom} ${c.Prenom} (${c.Email})</option>`;
+        });
+      } catch (e) {
+        select.innerHTML = '<option value="">Erreur chargement clients</option>';
+      }
+    }
+
+    select.addEventListener('change', async e => {
+  const idx = select.value;
+  if (idx === "") {
+    info.classList.add('hidden');
+    selectedClient = null;
+    return;
+  }
+  selectedClient = clients[idx];
+  cNom.textContent = selectedClient.Nom || "";
+  cPrenom.textContent = selectedClient.Prenom || "";
+  cAdresse.textContent = selectedClient.Adresse || "";
+  cPhone.textContent = selectedClient.Phone || "";
+  cEmail.textContent = selectedClient.Email || "";
+  info.classList.remove('hidden');
+
+  // POST immédiatement au webhook pour copier la trame et remplir les infos client
+  msg.textContent = "Enregistrement du client…";
+  msg.className = "";
+
+  const payload = {
+    nom: selectedClient.Nom,
+    prenom: selectedClient.Prenom,
+    adresse: selectedClient.Adresse,
+    phone: selectedClient.Phone,
+    email: selectedClient.Email
+  };
+
+ try {
+  const res = await fetch(DEVIS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (res.ok) {
+    const data = await res.json();
+console.log('Réponse complète du webhook:', data, 'Type:', Array.isArray(data) ? 'array' : typeof data);
+if (Array.isArray(data)) {
+  console.log('Contenu data[0]:', data[0]);
+}
+
+if (Array.isArray(data) && data[0] && data[0].documentId) {
+  copiedDocId = data[0].documentId;
+} else if (data.documentId) {
+  copiedDocId = data.documentId;
+} else if (data.id) {
+  copiedDocId = data.id;
+} else {
+  copiedDocId = null;
+}
+console.log('copiedDocId final:', copiedDocId);
+
+
+
+    if (copiedDocId) {
+      msg.textContent = "✅ Trame créée et client inscrit dans le devis.";
+      msg.className = "msg-success";
+      console.log('ID du document copié :', copiedDocId);
+    } else {
+      msg.textContent = "⚠️ Trame créée, mais impossible de récupérer l’ID du document.";
+      msg.className = "msg-error";
+    }
+  } else {
+    msg.textContent = "❌ Erreur lors de la création de la trame.";
+    msg.className = "msg-error";
+  }
+} catch (err) {
+  msg.textContent = "❌ Erreur réseau.";
+  msg.className = "msg-error";
+}
+
+});
+
+
+    loadClients();
+    console.log('Document ID utilisé pour remplir les postes:', copiedDocId);
+
+const POSTES_URL = 'https://n8n.n8n-sbf-avocats.fr/webhook/remplir-postes';
+
+document.getElementById('devis-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  msg.textContent = "";
+  msg.className = "";
+
+  if (!copiedDocId) {
+    msg.textContent = "Erreur : aucun devis n'a été généré pour ce client.";
+    msg.className = "msg-error";
+    return;
+  }
+
+  // Récupérer les postes
+let description = "";
+let posteCount = 1;
+for (let i = 1; i <= 9; i++) {
+  const poste = document.getElementById('poste' + i).value.trim();
+  if (poste !== "") {
+    description += `**POSTE ${posteCount}**\n${poste}\n\n`;
+    posteCount++;
+  }
+}
+
+
+const payload = {
+  documentId: copiedDocId,
+  description // ← c'est cette clé que le node Code traitera
+};
+
+
+  
+
+  try {
+    const res = await fetch(POSTES_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      msg.textContent = "✅ Postes du devis ajoutés avec succès !";
+      msg.className = "msg-success";
+    } else {
+      msg.textContent = "❌ Erreur lors de l'envoi des postes.";
+      msg.className = "msg-error";
+    }
+  } catch (err) {
+    msg.textContent = "❌ Erreur réseau lors de l'envoi des postes.";
+    msg.className = "msg-error";
+  }
+});
+function startVoiceInput(targetId) {
+  const textarea = document.getElementById(targetId);
+
+  if (!('webkitSpeechRecognition' in window)) {
+    alert("La reconnaissance vocale n'est pas supportée par ce navigateur.");
+    return;
+  }
+
+  const recognition = new webkitSpeechRecognition();
+  recognition.lang = 'fr-FR';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    textarea.value += (textarea.value ? '\n' : '') + transcript;
+  };
+
+  recognition.onerror = (event) => {
+    alert("Erreur de reconnaissance vocale : " + event.error);
+  };
+
+  recognition.start();
+}
+
+
+  </script>
+</body>
+</html>
