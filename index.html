@@ -118,9 +118,16 @@
       try {
         const res = await fetch(CLIENTS_URL);
         clients = await res.json();
+        clients.sort((a, b) => {
+  const nomA = (a.Nom + " " + a.Prenom).toLowerCase();
+  const nomB = (b.Nom + " " + b.Prenom).toLowerCase();
+  return nomA.localeCompare(nomB);
+});
+
         select.innerHTML = '<option value="">Sélectionnez…</option>';
         clients.forEach((c, idx) => {
-          select.innerHTML += `<option value="${idx}">${c.Nom} ${c.Prenom} (${c.Email})</option>`;
+          select.innerHTML += `<option value="${idx}">${c.Nom} ${c.Prenom}</option>`;
+
         });
       } catch (e) {
         select.innerHTML = '<option value="">Erreur chargement clients</option>';
